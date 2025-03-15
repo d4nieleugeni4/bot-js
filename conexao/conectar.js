@@ -1,4 +1,4 @@
-import { useMultiFileAuthState, makeInMemoryStore } from '@whiskeysockets/baileys';
+import { useMultiFileAuthState, makeInMemoryStore, default as Baileys } from '@whiskeysockets/baileys';
 import { Boom } from '@hapi/boom';
 import pino from 'pino';
 
@@ -10,7 +10,13 @@ async function conectarWhatsApp() {
     const { state, saveCreds } = await useMultiFileAuthState('auth_info');
 
     // Configuração do cliente
-    const sock = makeInMemoryStore({ logger });
+    const sock = Baileys.default({
+        logger,
+        auth: state,
+        printQRInTerminal: true, // Exibe o QR Code no terminal
+    });
+
+    // Configuração de eventos
     sock.ev.on('connection.update', (update) => {
         const { connection, lastDisconnect } = update;
         if (connection === 'close') {
