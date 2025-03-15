@@ -10,7 +10,8 @@ async function conectarWhatsApp() {
     const { state, saveCreds } = await useMultiFileAuthState('auth_info');
 
     // Configuração do cliente
-    const sock = Baileys.default({
+    const { default: BaileysClient } = Baileys;
+    const sock = BaileysClient({
         logger,
         auth: state,
         printQRInTerminal: true, // Exibe o QR Code no terminal
