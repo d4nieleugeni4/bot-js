@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     name: 'ping',
     description: 'Responde com "Pong!"',
     async execute(sock, message) {
