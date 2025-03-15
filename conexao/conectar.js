@@ -1,9 +1,10 @@
-const { useMultiFileAuthState, makeInMemoryStore } = require('@whiskeysockets/baileys');
-const { Boom } = require('@hapi/boom');
-const pino = require('pino');
+import { useMultiFileAuthState, makeInMemoryStore } from '@whiskeysockets/baileys';
+import { Boom } from '@hapi/boom';
+import pino from 'pino';
 
 async function conectarWhatsApp() {
-    const logger = pino({ level: 'silent' }); // Silencia os logs (mude para 'debug' se quiser ver detalhes)
+    // Configuração do logger (exibição no terminal)
+    const logger = pino({ level: 'silent' }); // Mude para 'debug' para ver logs detalhados
 
     // Armazenamento de autenticação
     const { state, saveCreds } = await useMultiFileAuthState('auth_info');
@@ -28,6 +29,7 @@ async function conectarWhatsApp() {
 
     // Iniciar conexão
     await sock.connect();
+    return sock; // Retorna o cliente para uso em outros arquivos
 }
 
-module.exports = conectarWhatsApp;
+export default conectarWhatsApp;
