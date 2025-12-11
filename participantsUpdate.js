@@ -1,4 +1,3 @@
-export const participantsUpdate = (sock) => {
-  // Placeholder caso queira usar futuramente
-  console.log("ParticipantsUpdate module carregado");
+module.exports.participantsUpdate = (sock) => {
+  // Adicione funcionalidades aqui se desejar
 };
