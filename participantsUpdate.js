@@ -1,3 +1,3 @@
-module.exports.participantsUpdate = (sock) => {
-  // Adicione funcionalidades aqui se desejar
-};
+export function participantsUpdate(sock) {
+  // Adicione funções se quiser
+}
