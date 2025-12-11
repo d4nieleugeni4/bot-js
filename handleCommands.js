@@ -1,12 +1,11 @@
-module.exports.handleCommands = (sock) => {
+export function handleCommands(sock) {
   sock.ev.on("messages.upsert", async ({ messages }) => {
     const m = messages[0];
     if (!m || !m.message || m.key.fromMe) return;
 
     const from = m.key.remoteJid;
-
-    // Obtém o texto corretamente na versão nova
     const type = Object.keys(m.message)[0];
+
     const text =
       m.message.conversation ||
       m.message[type]?.text ||
@@ -15,9 +14,8 @@ module.exports.handleCommands = (sock) => {
 
     if (!text) return;
 
-    // Comando ping
     if (text.toLowerCase().startsWith(".ping")) {
       await sock.sendMessage(from, { text: "pong!" });
     }
   });
-};
+}
