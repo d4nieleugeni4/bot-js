@@ -1,15 +1,18 @@
-
-const path = require("path");
-const {
+import { fileURLToPath } from 'url';
+import path from 'path';
+import {
   default: makeWASocket,
   DisconnectReason,
   useMultiFileAuthState,
-  fetchLatestBaileysVersion,
-} = require("@whiskeysockets/baileys");
-const readline = require("readline");
-const pino = require("pino");
-const { handleCommands } = require("./handleCommands.js");
-const { participantsUpdate } = require("./participantsUpdate.js");
+  fetchLatestBaileysVersion
+} from '@whiskeysockets/baileys';
+import readline from 'readline';
+import pino from 'pino';
+import { handleCommands } from './handleCommands.js';
+import { participantsUpdate } from './participantsUpdate.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const question = (string) => {
   const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
@@ -19,7 +22,7 @@ const question = (string) => {
   }));
 };
 
-exports.connect = async () => {
+export const connect = async () => {
   const { state, saveCreds } = await useMultiFileAuthState(
     path.resolve(__dirname, ".", "assets", "auth", "creds")
   );
@@ -56,7 +59,7 @@ exports.connect = async () => {
       console.log("Conexão fechada devido ao erro:", lastDisconnect.error, "Reconectando...", shouldReconnect);
 
       if (shouldReconnect) {
-        this.connect();
+        connect();
       }
     } else if (connection === "open") {
       console.log("✅ Bot conectado com sucesso!");
@@ -70,4 +73,5 @@ exports.connect = async () => {
   return sock;
 };
 
-this.connect();
+// Executar o bot
+connect();
