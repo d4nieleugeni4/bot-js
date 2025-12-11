@@ -12,32 +12,10 @@ export function handleCommands(sock) {
       m.message.extendedTextMessage?.text ||
       "";
 
-    // --- BOTÃO RESPOSTA ---
-    if (m.message?.buttonsResponseMessage) {
-      const buttonId = m.message.buttonsResponseMessage.selectedButtonId;
+    if (!text) return;
 
-      if (buttonId === "sim_btn") {
-        await sock.sendMessage(from, { text: "✔ Você escolheu: SIM" });
-      }
-
-      if (buttonId === "nao_btn") {
-        await sock.sendMessage(from, { text: "❌ Você escolheu: NÃO" });
-      }
-
-      return;
-    }
-
-    // --- COMANDO PARA ENVIAR OS BOTÕES ---
-    if (text.toLowerCase() === ".confirmar") {
-      await sock.sendMessage(from, {
-        text: "Deseja continuar?",
-        buttons: [
-          { buttonId: "sim_btn", buttonText: { displayText: "SIM" }, type: 1 },
-          { buttonId: "nao_btn", buttonText: { displayText: "NÃO" }, type: 1 }
-        ],
-        headerType: 1
-      });
-      return;
+    if (text.toLowerCase().startsWith(".ping")) {
+      await sock.sendMessage(from, { text: "pong!" });
     }
   });
 }
