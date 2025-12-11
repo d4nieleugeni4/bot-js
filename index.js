@@ -1,18 +1,14 @@
-import { fileURLToPath } from 'url';
-import path from 'path';
-import {
+const path = require("path");
+const {
   default: makeWASocket,
   DisconnectReason,
   useMultiFileAuthState,
-  fetchLatestBaileysVersion
-} from '@whiskeysockets/baileys';
-import readline from 'readline';
-import pino from 'pino';
-import { handleCommands } from './handleCommands.js';
-import { participantsUpdate } from './participantsUpdate.js';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+  fetchLatestBaileysVersion,
+} = require("@whiskeysockets/baileys");
+const readline = require("readline");
+const pino = require("pino");
+const { handleCommands } = require("./handleCommands.js");
+const { participantsUpdate } = require("./participantsUpdate.js");
 
 const question = (string) => {
   const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
@@ -22,7 +18,7 @@ const question = (string) => {
   }));
 };
 
-export const connect = async () => {
+async function connect() {
   const { state, saveCreds } = await useMultiFileAuthState(
     path.resolve(__dirname, ".", "assets", "auth", "creds")
   );
@@ -30,48 +26,50 @@ export const connect = async () => {
   const { version } = await fetchLatestBaileysVersion();
 
   const sock = makeWASocket({
-    printQRInTerminal: false,
     version,
     logger: pino({ level: "silent" }),
     auth: state,
-    browser: ["Ubuntu", "Chrome", "20.0.04"],
-    markOnlineOnConnect: true,
+    printQRInTerminal: true, // também mostra o QR no terminal
+    browser: ["Ubuntu", "Chrome", "110.0"],
   });
 
+  // Pairing Code (quando não está conectado)
   if (!sock.authState.creds.registered) {
-    let phoneNumber = await question("Informe o seu número de telefone: ");
-    phoneNumber = phoneNumber.replace(/[^0-9]/g, "");
+    let phone = await question("Informe o seu número (DDI + DDD + número): ");
+    phone = phone.replace(/\D/g, "");
 
-    if (!phoneNumber) {
-      throw new Error("Número de telefone inválido!");
-    }
+    if (!phone) throw new Error("Número inválido!");
 
-    const code = await sock.requestPairingCode(phoneNumber);
+    const code = await sock.requestPairingCode(phone);
     console.log("Código de pareamento:", code);
   }
 
+  // Eventos de conexão
   sock.ev.on("connection.update", (update) => {
     const { connection, lastDisconnect } = update;
 
     if (connection === "close") {
       const shouldReconnect =
-        lastDisconnect.error?.output?.statusCode !== DisconnectReason.loggedOut;
-      console.log("Conexão fechada devido ao erro:", lastDisconnect.error, "Reconectando...", shouldReconnect);
+        lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut;
 
-      if (shouldReconnect) {
-        connect();
-      }
-    } else if (connection === "open") {
+      console.log("❌ Conexão perdida:", lastDisconnect?.error);
+      console.log("🔄 Reconectando...");
+
+      if (shouldReconnect) connect();
+    }
+
+    if (connection === "open") {
       console.log("✅ Bot conectado com sucesso!");
     }
   });
 
   sock.ev.on("creds.update", saveCreds);
 
+  // Handlers
   handleCommands(sock);
   participantsUpdate(sock);
-  return sock;
-};
 
-// Executar o bot
+  return sock;
+}
+
 connect();
