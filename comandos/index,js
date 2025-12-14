@@ -1,48 +1,21 @@
-import { ping } from "./geral/ping.js";
+[file name]: comandos/handler.js
+[file content begin]
+import * as ping from './geral/ping.js';
 
-// Coleção de todos os comandos
-const commands = {
-  ping
+const comandos = {
+  '.ping': ping
 };
 
-// Função para carregar comandos dinamicamente
-export function loadCommands() {
-  const allCommands = {};
-  
-  // Adiciona cada comando ao objeto
-  Object.keys(commands).forEach(key => {
-    const cmd = commands[key];
-    allCommands[cmd.name] = cmd;
-  });
-  
-  return allCommands;
-}
-
-// Função para executar um comando
-export function executeCommand(commandName, sock, m, from, text) {
-  const allCommands = loadCommands();
-  const cmd = allCommands[commandName];
-  
-  if (cmd) {
-    return cmd.execute(sock, m, from, text);
+export function executarComando(nome, sock, m, text, from) {
+  const comando = comandos[nome.toLowerCase()];
+  if (comando) {
+    comando.executar(sock, m, text, from);
+    return true;
   }
-  
-  return null;
+  return false;
 }
 
-// Função para verificar se um comando existe
-export function commandExists(commandName) {
-  const allCommands = loadCommands();
-  return allCommands[commandName] !== undefined;
+export function listarComandos() {
+  return Object.keys(comandos);
 }
-
-// Função para obter a lista de comandos por categoria
-export function getCommandsByCategory(category) {
-  const allCommands = loadCommands();
-  return Object.values(allCommands)
-    .filter(cmd => cmd.category === category)
-    .map(cmd => ({
-      name: cmd.name,
-      description: cmd.description
-    }));
-}
+[file content end]
