@@ -1,0 +1,48 @@
+import { ping } from "./geral/ping.js";
+
+// Coleção de todos os comandos
+const commands = {
+  ping
+};
+
+// Função para carregar comandos dinamicamente
+export function loadCommands() {
+  const allCommands = {};
+  
+  // Adiciona cada comando ao objeto
+  Object.keys(commands).forEach(key => {
+    const cmd = commands[key];
+    allCommands[cmd.name] = cmd;
+  });
+  
+  return allCommands;
+}
+
+// Função para executar um comando
+export function executeCommand(commandName, sock, m, from, text) {
+  const allCommands = loadCommands();
+  const cmd = allCommands[commandName];
+  
+  if (cmd) {
+    return cmd.execute(sock, m, from, text);
+  }
+  
+  return null;
+}
+
+// Função para verificar se um comando existe
+export function commandExists(commandName) {
+  const allCommands = loadCommands();
+  return allCommands[commandName] !== undefined;
+}
+
+// Função para obter a lista de comandos por categoria
+export function getCommandsByCategory(category) {
+  const allCommands = loadCommands();
+  return Object.values(allCommands)
+    .filter(cmd => cmd.category === category)
+    .map(cmd => ({
+      name: cmd.name,
+      description: cmd.description
+    }));
+}
