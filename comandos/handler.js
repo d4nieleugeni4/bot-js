@@ -1,5 +1,4 @@
-[file name]: comandos/handler.js
-[file content begin]
+
 import * as ping from './geral/ping.js';
 
 const comandos = {
