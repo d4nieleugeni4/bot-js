@@ -1,5 +1,4 @@
-[file name]: handleCommands.js
-[file content begin]
+
 import { executarComando, getComandoInfo } from './comandos/handler.js';
 
 export function handleCommands(sock) {
@@ -34,4 +33,4 @@ export function handleCommands(sock) {
     }
   });
 }
-[file content end]
+
