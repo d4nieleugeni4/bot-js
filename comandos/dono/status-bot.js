@@ -1,7 +1,7 @@
 
 // Lista de números autorizados (coloque seu número aqui)
 const DONOS = [
-  "5511999999999@s.whatsapp.net",  // Substitua pelo seu número
+  "5524981321901@s.whatsapp.net",  // Substitua pelo seu número
   "5511888888888@s.whatsapp.net"   // Adicione outros números se quiser
 ];
 
