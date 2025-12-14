@@ -1,5 +1,6 @@
-
-import { executarComando } from './comandos/handler.js';
+[file name]: handleCommands.js
+[file content begin]
+import { executarComando, getComandoInfo } from './comandos/handler.js';
 
 export function handleCommands(sock) {
   sock.ev.on("messages.upsert", async ({ messages }) => {
@@ -20,15 +21,17 @@ export function handleCommands(sock) {
     // Extrai o comando (primeira palavra)
     const comando = text.trim().split(' ')[0];
     
+    // Verifica se é um comando válido
+    const infoComando = getComandoInfo(comando);
+    if (!infoComando) return;
+    
     // Tenta executar o comando
     const executado = executarComando(comando, sock, m, text, from);
     
-    // Se quiser adicionar uma resposta para comandos não encontrados
-    // if (!executado) {
-    //   await sock.sendMessage(from, { 
-    //     text: `Comando não encontrado. Digite .ajuda para ver os comandos disponíveis.` 
-    //   });
-    // }
+    // Log para debug (opcional)
+    if (executado) {
+      console.log(`📝 Comando executado: ${comando} por ${m.key.participant || m.key.remoteJid}`);
+    }
   });
 }
-
+[file content end]
