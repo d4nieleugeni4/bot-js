@@ -1,4 +1,6 @@
-import { executeCommand, commandExists } from "./comandos/index.js";
+[file name]: handleCommands.js
+[file content begin]
+import { executarComando } from './comandos/handler.js';
 
 export function handleCommands(sock) {
   sock.ev.on("messages.upsert", async ({ messages }) => {
@@ -14,26 +16,20 @@ export function handleCommands(sock) {
       m.message.extendedTextMessage?.text ||
       "";
 
-    if (!text || !text.startsWith(".")) return;
+    if (!text) return;
 
-    // Remove o ponto e obtém o comando
-    const commandText = text.slice(1).toLowerCase().trim();
-    const args = commandText.split(" ");
-    const commandName = args[0];
-    const commandArgs = args.slice(1).join(" ");
-
-    // Verifica se o comando existe
-    if (commandExists(commandName)) {
-      console.log(`📝 Comando executado: ${commandName} por ${from}`);
-      
-      try {
-        await executeCommand(commandName, sock, m, from, commandArgs);
-      } catch (error) {
-        console.error(`❌ Erro ao executar comando ${commandName}:`, error);
-        await sock.sendMessage(from, {
-          text: `❌ Ocorreu um erro ao executar o comando: ${error.message}`
-        });
-      }
-    }
+    // Extrai o comando (primeira palavra)
+    const comando = text.trim().split(' ')[0];
+    
+    // Tenta executar o comando
+    const executado = executarComando(comando, sock, m, text, from);
+    
+    // Se quiser adicionar uma resposta para comandos não encontrados
+    // if (!executado) {
+    //   await sock.sendMessage(from, { 
+    //     text: `Comando não encontrado. Digite .ajuda para ver os comandos disponíveis.` 
+    //   });
+    // }
   });
 }
+[file content end]
