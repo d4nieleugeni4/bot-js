@@ -5,4 +5,4 @@ export async function executar(sock, m, text, from) {
 
 export const descricao = "Testa se o bot está online";
 export const uso = ".ping";
-[file content end]
+
