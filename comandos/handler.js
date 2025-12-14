@@ -1,5 +1,4 @@
-[file name]: comandos/handler.js
-[file content begin]
+
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -64,4 +63,4 @@ export function getComandoInfo(nome) {
   }
   return null;
 }
-[file content end]
+
