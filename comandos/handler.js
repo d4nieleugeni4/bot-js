@@ -17,4 +17,3 @@ export function executarComando(nome, sock, m, text, from) {
 export function listarComandos() {
   return Object.keys(comandos);
 }
-[file content end]
