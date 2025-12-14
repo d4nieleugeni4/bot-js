@@ -1,5 +1,4 @@
-[file name]: comandos/adm/delete.js
-[file content begin]
+
 export async function executar(sock, m, text, from) {
   // Verifica se é um grupo
   if (!from.endsWith('@g.us')) {
@@ -51,4 +50,4 @@ export async function executar(sock, m, text, from) {
 export const descricao = "Deleta uma mensagem em grupo (responda à mensagem)";
 export const uso = ".delete";
 export const categoria = "adm";
-[file content end]
+
